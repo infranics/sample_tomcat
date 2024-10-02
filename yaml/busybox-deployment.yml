@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: busybox
+  labels:
+    app: busybox 
+  namespace: infranics 
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app:  busybox
+  template:
+    metadata:
+      labels:
+        app: busybox 
+    spec:
+      containers:
+      - name: busybox 
+        image: busybox:latest
+        imagePullPolicy: Always
+        command:
+        - sleep
+        - "360000"
+        volumeMounts:
+        - mountPath: /data
+          name: infranics-pvc
+        resources:
+          limits:
+            cpu: 500m
+            memory: 1000Mi
+        securityContext:
+          allowPrivilegeEscalation: false 
+          capabilities:
+            drop:
+            - ALL
+          runAsNonRoot: false 
+          seccompProfile:
+            type: RuntimeDefault 
+      volumes:
+      - name: infranics-pvc
+        persistentVolumeClaim:
+          claimName: data-infranics-storage 

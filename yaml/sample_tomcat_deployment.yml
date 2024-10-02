@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tomcat
+  labels:
+    app: tomcat 
+  namespace: infranics 
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app:  tomcat
+  template:
+    metadata:
+      labels:
+        app: tomcat 
+    spec:
+      containers:
+      - name: tomcat 
+        image: infranics/sample_tomcat:0.1
+        ports:
+        - containerPort: 8080
+        imagePullPolicy: Always
+        volumeMounts:
+        - mountPath: /data
+          name: infranics-pvc
+        resources:
+          limits:
+            cpu: 4000m
+            memory: 8000Mi
+        securityContext:
+          allowPrivilegeEscalation: false 
+          capabilities:
+            drop:
+            - ALL
+          runAsNonRoot: false 
+          seccompProfile:
+            type: RuntimeDefault 
+      volumes:
+      - name: infranics-pvc
+        persistentVolumeClaim:
+          claimName: data-infranics-storage 
