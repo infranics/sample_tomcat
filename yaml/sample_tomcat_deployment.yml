@@ -21,22 +21,7 @@ spec:
         ports:
         - containerPort: 8080
         imagePullPolicy: Always
-        volumeMounts:
-        - mountPath: /data
-          name: infranics-pvc
         resources:
           limits:
             cpu: 4000m
             memory: 8000Mi
-        securityContext:
-          allowPrivilegeEscalation: false 
-          capabilities:
-            drop:
-            - ALL
-          runAsNonRoot: false 
-          seccompProfile:
-            type: RuntimeDefault 
-      volumes:
-      - name: infranics-pvc
-        persistentVolumeClaim:
-          claimName: data-infranics-storage 
